@@ -1,6 +1,12 @@
 import React from "react";
-import { useTable, useBlockLayout, useResizeColumns } from "react-table";
+import {
+  useTable,
+  useBlockLayout,
+  useResizeColumns,
+  useSortBy,
+} from "react-table";
 import { GroupedVirtuoso } from "react-virtuoso";
+import { FiArrowDown, FiArrowUp } from "react-icons/fi";
 
 import makeData from "../makeData";
 
@@ -69,7 +75,8 @@ const Table = () => {
   } = useTable(
     { columns, data, defaultColumn },
     useBlockLayout,
-    useResizeColumns
+    useResizeColumns,
+    useSortBy
   );
 
   const RenderRow = React.useCallback(
@@ -111,14 +118,29 @@ const Table = () => {
                   {headerGroups.map((headerGroup) => (
                     <div
                       {...headerGroup.getHeaderGroupProps()}
-                      className="bg-gray-100 border-b border-gray-200"
+                      className="bg-gray-100 border-t border-b border-gray-200"
                     >
                       {headerGroup.headers.map((column) => (
                         <div
                           {...column.getHeaderProps()}
                           className="text-sm text-gray-600 p-1 relative"
                         >
-                          {column.render("Header")}
+                          <div className="flex items-center justify-between">
+                            <div {...column.getSortByToggleProps()}>
+                              {column.render("Header")}
+                            </div>
+                            <span className="pr-2">
+                              {column.isSorted ? (
+                                column.isSortedDesc ? (
+                                  <FiArrowDown />
+                                ) : (
+                                  <FiArrowUp />
+                                )
+                              ) : (
+                                ""
+                              )}
+                            </span>
+                          </div>
                           <div
                             className="absolute right-0 top-0 bottom-0 h-full w-2 hover:bg-blue-700"
                             {...column.getResizerProps()}
