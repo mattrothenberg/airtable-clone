@@ -6,15 +6,115 @@ import {
   useSortBy,
 } from "react-table";
 import { GroupedVirtuoso } from "react-virtuoso";
-import { FiArrowDown, FiArrowUp } from "react-icons/fi";
+import { FiArrowDown, FiArrowUp, FiChevronDown } from "react-icons/fi";
+import { Popover } from "react-tiny-popover";
+import {
+  useMenuState,
+  Menu,
+  MenuItem,
+  MenuButton,
+  MenuSeparator,
+} from "reakit/Menu";
 
 import makeData from "../makeData";
+
+const TableHeaderPopover = () => {
+  const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
+  const menu = useMenuState();
+  const ref = React.useRef();
+
+  React.useEffect(() => {
+    if (isPopoverOpen) {
+      ref?.current?.focus();
+    }
+  }, [isPopoverOpen]);
+
+  return (
+    <Popover
+      isOpen={isPopoverOpen}
+      positions={["bottom"]}
+      onClickOutside={() => setIsPopoverOpen(false)}
+      content={
+        <Menu
+          {...menu}
+          className="bg-gray-900 text-white rounded w-36"
+          aria-label="Header options"
+          visible
+        >
+          <MenuItem
+            ref={ref}
+            className="block hover:bg-gray-800 text-sm py-2 px-3 w-full focus:outline-none focus:ring text-left"
+            {...menu}
+          >
+            Sort A to Z
+          </MenuItem>
+          <MenuItem
+            className="block hover:bg-gray-800 text-sm py-2 px-3 w-full focus:outline-none focus:ring text-left"
+            {...menu}
+          >
+            Sort Z to A
+          </MenuItem>
+          <MenuItem
+            className="block hover:bg-gray-800 text-sm py-2 px-3 w-full focus:outline-none focus:ring text-left"
+            {...menu}
+          >
+            Add Filter
+          </MenuItem>
+          <MenuItem
+            className="block hover:bg-gray-800 text-sm py-2 px-3 w-full focus:outline-none focus:ring text-left"
+            {...menu}
+          >
+            Hide Field
+          </MenuItem>
+        </Menu>
+      }
+    >
+      <button onClick={() => setIsPopoverOpen(!isPopoverOpen)}>
+        <FiChevronDown />
+      </button>
+    </Popover>
+  );
+};
 
 const Button = ({ children }) => {
   return (
     <button className="h-6 hover:bg-gray-100 rounded text-sm text-gray-700 px-2 focus:ring focus:outline-none font-medium">
       {children}
     </button>
+  );
+};
+
+const TableHeader = ({ column }) => {
+  return (
+    <div
+      {...column.getHeaderProps()}
+      className="text-sm text-gray-600 p-1 relative"
+    >
+      <div className="flex items-center justify-between">
+        <div
+          className="flex items-center space-x-2"
+          {...column.getSortByToggleProps()}
+        >
+          <span>{column.render("Header")}</span>
+          <span>
+            {column.isSorted ? (
+              column.isSortedDesc ? (
+                <FiArrowDown />
+              ) : (
+                <FiArrowUp />
+              )
+            ) : (
+              ""
+            )}
+          </span>
+        </div>
+        <TableHeaderPopover />
+      </div>
+      <div
+        className="absolute right-0 top-0 bottom-0 h-full w-2 hover:bg-blue-700"
+        {...column.getResizerProps()}
+      ></div>
+    </div>
   );
 };
 
@@ -120,33 +220,9 @@ const Table = () => {
                       {...headerGroup.getHeaderGroupProps()}
                       className="bg-gray-100 border-t border-b border-gray-200"
                     >
-                      {headerGroup.headers.map((column) => (
-                        <div
-                          {...column.getHeaderProps()}
-                          className="text-sm text-gray-600 p-1 relative"
-                        >
-                          <div className="flex items-center justify-between">
-                            <div {...column.getSortByToggleProps()}>
-                              {column.render("Header")}
-                            </div>
-                            <span className="pr-2">
-                              {column.isSorted ? (
-                                column.isSortedDesc ? (
-                                  <FiArrowDown />
-                                ) : (
-                                  <FiArrowUp />
-                                )
-                              ) : (
-                                ""
-                              )}
-                            </span>
-                          </div>
-                          <div
-                            className="absolute right-0 top-0 bottom-0 h-full w-2 hover:bg-blue-700"
-                            {...column.getResizerProps()}
-                          ></div>
-                        </div>
-                      ))}
+                      {headerGroup.headers.map((column, index) => {
+                        return <TableHeader key={index} column={column} />;
+                      })}
                     </div>
                   ))}
                 </div>
