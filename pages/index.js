@@ -1,6 +1,6 @@
 import React from "react";
-import { useTable, useBlockLayout } from "react-table";
-import { Virtuoso, GroupedVirtuoso } from "react-virtuoso";
+import { useTable, useBlockLayout, useResizeColumns } from "react-table";
+import { GroupedVirtuoso } from "react-virtuoso";
 
 import makeData from "../makeData";
 
@@ -13,6 +13,15 @@ const Button = ({ children }) => {
 };
 
 const Table = () => {
+  const defaultColumn = React.useMemo(
+    () => ({
+      minWidth: 30,
+      width: 150,
+      maxWidth: 400,
+    }),
+    []
+  );
+
   const columns = React.useMemo(
     () => [
       {
@@ -57,7 +66,11 @@ const Table = () => {
     headerGroups,
     rows,
     prepareRow,
-  } = useTable({ columns, data }, useBlockLayout);
+  } = useTable(
+    { columns, data, defaultColumn },
+    useBlockLayout,
+    useResizeColumns
+  );
 
   const RenderRow = React.useCallback(
     (index) => {
@@ -103,9 +116,13 @@ const Table = () => {
                       {headerGroup.headers.map((column) => (
                         <div
                           {...column.getHeaderProps()}
-                          className="text-sm text-gray-600 p-1"
+                          className="text-sm text-gray-600 p-1 relative"
                         >
                           {column.render("Header")}
+                          <div
+                            className="absolute right-0 top-0 bottom-0 h-full w-2 hover:bg-blue-700"
+                            {...column.getResizerProps()}
+                          ></div>
                         </div>
                       ))}
                     </div>
