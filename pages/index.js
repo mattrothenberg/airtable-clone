@@ -8,13 +8,7 @@ import {
 import { GroupedVirtuoso } from "react-virtuoso";
 import { FiArrowDown, FiArrowUp, FiChevronDown } from "react-icons/fi";
 import { Popover } from "react-tiny-popover";
-import {
-  useMenuState,
-  Menu,
-  MenuItem,
-  MenuButton,
-  MenuSeparator,
-} from "reakit/Menu";
+import { useMenuState, Menu, MenuItem } from "reakit/Menu";
 
 import makeData from "../makeData";
 
@@ -25,7 +19,7 @@ const TableHeaderPopover = () => {
 
   React.useEffect(() => {
     if (isPopoverOpen) {
-      ref?.current?.focus();
+      menu.first();
     }
   }, [isPopoverOpen]);
 
@@ -69,7 +63,10 @@ const TableHeaderPopover = () => {
         </Menu>
       }
     >
-      <button onClick={() => setIsPopoverOpen(!isPopoverOpen)}>
+      <button
+        className="text-gray-400 hover:text-gray-900"
+        onClick={() => setIsPopoverOpen(!isPopoverOpen)}
+      >
         <FiChevronDown />
       </button>
     </Popover>
@@ -88,9 +85,9 @@ const TableHeader = ({ column }) => {
   return (
     <div
       {...column.getHeaderProps()}
-      className="text-sm text-gray-600 p-1 relative"
+      className="text-sm text-gray-600 px-2 py-1 relative"
     >
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mr-2">
         <div
           className="flex items-center space-x-2"
           {...column.getSortByToggleProps()}
@@ -145,12 +142,10 @@ const Table = () => {
       {
         Header: "Age",
         accessor: "age",
-        width: 50,
       },
       {
         Header: "Visits",
         accessor: "visits",
-        width: 60,
       },
       {
         Header: "Status",
@@ -187,7 +182,7 @@ const Table = () => {
         <div {...row.getRowProps({})} className="bg-white">
           {row.cells.map((cell) => {
             return (
-              <div {...cell.getCellProps()} className="p-1 border-b">
+              <div {...cell.getCellProps()} className="px-2 py-1 border-b">
                 {cell.render("Cell")}
               </div>
             );
