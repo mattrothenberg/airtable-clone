@@ -31,31 +31,31 @@ const TableHeaderPopover = () => {
       content={
         <Menu
           {...menu}
-          className="bg-gray-900 text-white rounded w-36"
+          className="bg-gray-900 text-white rounded w-36 focus:outline-none"
           aria-label="Header options"
           visible
         >
           <MenuItem
             ref={ref}
-            className="block hover:bg-gray-800 text-sm py-2 px-3 w-full focus:outline-none focus:ring text-left"
+            className="block hover:bg-gray-800 text-xs py-2 px-3 w-full focus:outline-none focus:ring text-left"
             {...menu}
           >
             Sort A to Z
           </MenuItem>
           <MenuItem
-            className="block hover:bg-gray-800 text-sm py-2 px-3 w-full focus:outline-none focus:ring text-left"
+            className="block hover:bg-gray-800 text-xs py-2 px-3 w-full focus:outline-none focus:ring text-left"
             {...menu}
           >
             Sort Z to A
           </MenuItem>
           <MenuItem
-            className="block hover:bg-gray-800 text-sm py-2 px-3 w-full focus:outline-none focus:ring text-left"
+            className="block hover:bg-gray-800 text-xs py-2 px-3 w-full focus:outline-none focus:ring text-left"
             {...menu}
           >
             Add Filter
           </MenuItem>
           <MenuItem
-            className="block hover:bg-gray-800 text-sm py-2 px-3 w-full focus:outline-none focus:ring text-left"
+            className="block hover:bg-gray-800 text-xs py-2 px-3 w-full focus:outline-none focus:ring text-left"
             {...menu}
           >
             Hide Field
@@ -92,7 +92,7 @@ const TableHeader = ({ column }) => {
           className="flex items-center space-x-2"
           {...column.getSortByToggleProps()}
         >
-          <span>{column.render("Header")}</span>
+          <span className="select-none">{column.render("Header")}</span>
           <span>
             {column.isSorted ? (
               column.isSortedDesc ? (
@@ -108,7 +108,7 @@ const TableHeader = ({ column }) => {
         <TableHeaderPopover />
       </div>
       <div
-        className="absolute right-0 top-0 bottom-0 h-full w-2 hover:bg-blue-700"
+        className="absolute right-0 top-0 bottom-0 h-full w-2 hover:bg-gray-400"
         {...column.getResizerProps()}
       ></div>
     </div>
